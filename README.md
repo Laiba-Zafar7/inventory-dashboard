@@ -25,7 +25,7 @@ A **full-stack inventory management dashboard** built with **Next.js, Redux Tool
 ## Screenshots
 
 ### Dashboard
-![admin](screenshots/admin(2).png)
+![admin](screenshots/admin (2).png)
 
 ### Inventory
 ![inventory](screenshots/inventory.png)
