@@ -1,0 +1,116 @@
+// prisma/schema.prisma
+// Prisma v7 compatible schema for Inventory + Finance app
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+    
+}
+
+// -----------------------------
+// USERS
+// -----------------------------
+model Users {
+  userId String @id @default(uuid())
+  name   String
+  email  String @unique
+}
+
+// -----------------------------
+// PRODUCTS
+// -----------------------------
+model Products {
+  productId     String      @id @default(uuid())
+  name          String      @unique
+  price         Decimal     @db.Decimal(10, 2)
+  rating        Float?
+  stockQuantity Int
+  Sales         Sales[]
+  Purchases     Purchases[]
+  image         String
+  
+}
+
+// -----------------------------
+// SALES
+// -----------------------------
+model Sales {
+  saleId      String   @id @default(uuid())
+  productId   String
+  timestamp   DateTime @default(now())
+  quantity    Int
+  unitPrice   Decimal  @db.Decimal(10, 2)
+  totalAmount Decimal  @db.Decimal(12, 2)
+
+  product Products @relation(fields: [productId], references: [productId])
+}
+
+// -----------------------------
+// PURCHASES
+// -----------------------------
+model Purchases {
+  purchaseId String   @id @default(uuid())
+  productId  String
+  timestamp  DateTime @default(now())
+  quantity   Int
+  unitCost   Decimal  @db.Decimal(10, 2)
+  totalCost  Decimal  @db.Decimal(12, 2)
+
+  product Products @relation(fields: [productId], references: [productId])
+}
+
+// -----------------------------
+// EXPENSES
+// -----------------------------
+model Expenses {
+  expenseId String   @id @default(uuid())
+  category  String
+  amount    Decimal  @db.Decimal(12, 2)
+  timestamp DateTime @default(now())
+}
+
+// -----------------------------
+// SALES SUMMARY
+// -----------------------------
+model SalesSummary {
+  salesSummaryId   String   @id @default(uuid())
+  totalValue       Decimal  @db.Decimal(14, 2)
+  changePercentage Float?
+  date             DateTime @default(now())
+}
+
+// -----------------------------
+// PURCHASE SUMMARY
+// -----------------------------
+model PurchaseSummary {
+  purchaseSummaryId String   @id @default(uuid())
+  totalPurchased    Decimal  @db.Decimal(14, 2)
+  changePercentage  Float?
+  date              DateTime @default(now())
+}
+
+// -----------------------------
+// EXPENSE SUMMARY
+// -----------------------------
+model ExpenseSummary {
+  expenseSummaryId  String              @id @default(uuid())
+  totalExpenses     Decimal             @db.Decimal(14, 2)
+  date              DateTime            @default(now())
+  ExpenseByCategory ExpenseByCategory[]
+}
+
+// -----------------------------
+// EXPENSE BY CATEGORY
+// -----------------------------
+model ExpenseByCategory {
+  expenseByCategoryId String         @id @default(uuid())
+  expenseSummaryId    String
+  category            String
+  amount              Decimal        @db.Decimal(12, 2)
+  date                DateTime       @default(now())
+
+  expenseSummary ExpenseSummary @relation(fields: [expenseSummaryId], references: [expenseSummaryId])
+}

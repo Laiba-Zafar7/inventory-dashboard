@@ -1,0 +1,19 @@
+# Node
+node_modules/
+npm-debug.log
+
+# Env
+.env
+.env.local
+.env.development
+.env.production
+
+# Next.js
+.next/
+out/
+
+# VSCode
+.vscode/
+
+# Prisma
+prisma/dev.db
